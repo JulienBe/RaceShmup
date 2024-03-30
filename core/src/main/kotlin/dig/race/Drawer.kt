@@ -19,6 +19,13 @@ class Drawer {
     private val buffer = frameBuffer()
 
     fun draw(cars: Array<Car>) {
+        batch.color = Color.CORAL
+        cars.forEach {
+            batch.draw(image, it.pos.x.round(), it.pos.y.round(), 1f, 1f)
+        }
+    }
+
+    fun begin() {
         cam.position.set(CurrentCamFocus.x.round(), CurrentCamFocus.y.round(), cam.position.z)
         cam.update()
         batch.projectionMatrix = cam.combined
@@ -26,11 +33,9 @@ class Drawer {
         batch.begin()
         Gdx.graphics.gL20.glClearColor(0f, 0f, 0f, 1f)
         Gdx.graphics.gL20.glClear(GL20.GL_COLOR_BUFFER_BIT)
+    }
 
-        cars.forEach {
-            it.draw(batch, image)
-        }
-
+    fun end() {
         batch.end()
         buffer.end()
         val texture = buffer.colorBufferTexture
@@ -43,6 +48,13 @@ class Drawer {
         batch.begin()
         batch.draw(texture, 0f, GResolution.area.h, GResolution.area.w, -GResolution.area.h)
         batch.end()
+    }
+
+    fun draw(track: Track) {
+        batch.color = Color.GRAY
+        track.pieces.forEach {
+            batch.draw(image, it.x.toFloat(), it.y.toFloat(), Track.pieceSizeF, Track.pieceSizeF)
+        }
     }
 
     companion object {

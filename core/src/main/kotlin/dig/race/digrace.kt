@@ -19,7 +19,7 @@ class MainScreenTurnedOn : KtxScreen {
     private val input = Input()
     private val physics = Physics()
     private var player = Builder.createCar()
-    private val map = Builder.addTrack()
+    private val track = Track()
 
     init {
         cars.add(player)
@@ -29,6 +29,7 @@ class MainScreenTurnedOn : KtxScreen {
     override fun render(delta: Float) {
         clearScreen(red = 0.0f, green = 0.0f, blue = 0.0f)
         input.act()
+        track.act()
         cars.forEach { car ->
             car.act(input.act(), delta)
         }
@@ -38,7 +39,10 @@ class MainScreenTurnedOn : KtxScreen {
             CurrentCamFocus.y = y
             CurrentCamFocus.z = z + 5f
         }
+        drawer.begin()
+        drawer.draw(track)
         drawer.draw(cars)
+        drawer.end()
     }
 
     override fun dispose() {
