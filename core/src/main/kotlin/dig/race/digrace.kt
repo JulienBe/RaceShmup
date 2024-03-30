@@ -20,6 +20,7 @@ class MainScreenTurnedOn : KtxScreen {
     private val physics = Physics()
     private var player = Builder.createCar()
     private val track = Track()
+    private val perf = PerfTracker()
 
     init {
         cars.add(player)
@@ -28,22 +29,25 @@ class MainScreenTurnedOn : KtxScreen {
 
     override fun render(delta: Float) {
         clearScreen(red = 0.0f, green = 0.0f, blue = 0.0f)
-        input.act()
-        track.act()
-        cars.forEach { car ->
-            car.act(input.act(), delta)
+        perf.measure("input.act") { input.act() }
+        perf.measure("track.act") { track.act() }
+        perf.measure("car.act") {
+            cars.forEach { car ->
+                car.act(input.act(), delta)
+            }
         }
-        physics.moveCars(delta, cars)
-        Collider.checkCollisions(cars, track)
+        perf.measure("physics.moveCars") { physics.moveCars(delta, cars) }
+        perf.measure("Collider.checkCollisions") { Collider.checkCollisions(cars, track) }
         with(player.pos) {
             CurrentCamFocus.x = x
             CurrentCamFocus.y = y
             CurrentCamFocus.z = z + 5f
         }
         drawer.begin()
-        drawer.draw(track)
-        drawer.draw(cars)
+        perf.measure("drawer.drawTrack") { drawer.drawTrack(track) }
+        perf.measure("drawer.drawCars") { drawer.drawCars(cars) }
         drawer.end()
+        perf.update(delta)
     }
 
     override fun dispose() {

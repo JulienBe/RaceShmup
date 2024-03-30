@@ -9,21 +9,27 @@ class TrackPiece(
     val x: Int,
     val y: Int
 ) {
+    private val xF = x.toFloat()
+    private val yF = y.toFloat()
+    private val cenerX = xF + size / 2f
+    private val cenerY = yF + size / 2f
 
     fun draw(batch: SpriteBatch, image: Texture) {
-        batch.draw(image, x.toFloat(), y.toFloat(), size.toFloat(), size.toFloat())
+        batch.draw(image, xF, yF, sizeF, sizeF)
     }
 
     companion object {
-        const val size = 2
+        const val size = 8
         const val sizeF = size.toFloat()
+        const val hSiwe = size / 2
+        const val hSizeF = hSiwe.toFloat()
         val noPiece = TrackPiece(-1, -1, -1)
     }
 }
 
 class Track {
 
-    val pieces = Array(trackWidth) { Array<TrackPiece>(trackHeight) { TrackPiece.noPiece } }
+    val pieces = Array(trackWidth) { Array(trackHeight) { TrackPiece.noPiece } }
 
     init {
         for (x in 0 until trackWidth) {
@@ -57,7 +63,7 @@ class Track {
     }
 
     companion object {
-        const val trackWidth = 100
-        const val trackHeight = 100
+        const val trackWidth = 1000
+        const val trackHeight = 1000
     }
 }

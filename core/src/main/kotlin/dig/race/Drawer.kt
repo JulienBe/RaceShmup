@@ -18,10 +18,28 @@ class Drawer {
     private val image = Texture("square.png".toInternalFile(), true).apply { setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest) }
     private val buffer = frameBuffer()
 
-    fun draw(cars: Array<Car>) {
+    fun drawCars(cars: Array<Car>) {
         batch.color = Color.CORAL
         cars.forEach {
             batch.draw(image, it.pos.x.round(), it.pos.y.round(), 1f, 1f)
+        }
+    }
+
+
+    fun drawTrack(track: Track) {
+        batch.color = Color.GRAY
+        val camLeft = (cam.position.x - cam.viewportWidth / 2).toInt() / TrackPiece.size
+        val camRight = (cam.position.x + cam.viewportWidth / 2).toInt() / TrackPiece.size
+        val camBottom = (cam.position.y - cam.viewportHeight / 2).toInt() / TrackPiece.size
+        val camTop = (cam.position.y + cam.viewportHeight / 2).toInt() / TrackPiece.size
+
+        for (x in camLeft..camRight) {
+            for (y in camBottom..camTop) {
+                val piece = track.get(x, y)
+                if (piece != TrackPiece.noPiece) {
+                    piece.draw(batch, image)
+                }
+            }
         }
     }
 
@@ -48,13 +66,6 @@ class Drawer {
         batch.begin()
         batch.draw(texture, 0f, GResolution.area.h, GResolution.area.w, -GResolution.area.h)
         batch.end()
-    }
-
-    fun draw(track: Track) {
-        batch.color = Color.GRAY
-        track.pieces.forEach {
-            it.forEach { it.draw(batch, image) }
-        }
     }
 
     companion object {
