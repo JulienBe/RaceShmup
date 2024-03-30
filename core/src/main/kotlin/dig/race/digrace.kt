@@ -1,6 +1,7 @@
 package dig.race
 
 import com.badlogic.ashley.core.PooledEngine
+import dig.race.systems.SControl
 import dig.race.systems.SDraw2D
 import dig.race.systems.SMvt
 import ktx.app.KtxGame
@@ -22,6 +23,7 @@ class MainScreenTurnedOn : KtxScreen {
     private val engine = PooledEngine()
 
     init {
+        engine.addSystem(SControl())
         engine.addSystem(SMvt())
         engine.addSystem(SDraw2D())
         FamilyBuilder.addCar(engine)
