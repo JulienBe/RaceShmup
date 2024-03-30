@@ -10,8 +10,11 @@ class Pos {
     val yI: Int get() = pos.y.toInt()
     val zI: Int get() = pos.z.toInt()
     val x: Float get() = pos.x
+    val prevX: Float get() = previousPos.x
     val y: Float get() = pos.y
+    val prevY: Float get() = previousPos.y
     val z: Float get() = pos.z
+    val prevZ: Float get() = previousPos.z
 
     fun set(x: Float, y: Float, z: Float) {
         previousPos.set(pos)

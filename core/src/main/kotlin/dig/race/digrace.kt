@@ -13,10 +13,6 @@ class digrace : KtxGame<KtxScreen>() {
         addScreen(MainScreenTurnedOn())
         setScreen<MainScreenTurnedOn>()
     }
-    companion object {
-        const val WIDTH = 256f
-        const val HEIGHT = 144f
-    }
 }
 
 class MainScreenTurnedOn : KtxScreen {
@@ -26,7 +22,7 @@ class MainScreenTurnedOn : KtxScreen {
         engine.addSystem(SControl())
         engine.addSystem(SMvt())
         engine.addSystem(SDraw2D())
-        FamilyBuilder.addCar(engine)
+        CarBuilder.addCar(engine)
     }
 
     override fun render(delta: Float) {

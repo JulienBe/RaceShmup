@@ -12,7 +12,7 @@ fun main() {
       return
     Lwjgl3Application(digrace(), Lwjgl3ApplicationConfiguration().apply {
         setTitle("digrace")
-        setWindowedMode(640, 480)
+        setWindowedMode(320 * 3, 200 * 3)
         setWindowIcon(*(arrayOf(128, 64, 32, 16).map { "libgdx$it.png" }.toTypedArray()))
     })
 }
