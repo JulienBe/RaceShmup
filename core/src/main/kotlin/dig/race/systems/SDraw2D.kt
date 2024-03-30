@@ -6,18 +6,24 @@ import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.Family
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Pixmap
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.FrameBuffer
+import com.badlogic.gdx.math.Vector3
+import dig.race.CurrentCamFocus
 import dig.race.GResolution.area
+import dig.race.comp.CCamFocus
 import dig.race.comp.CPos
 import ktx.assets.disposeSafely
 import ktx.assets.toInternalFile
 import java.util.Comparator
+import kotlin.math.roundToInt
 import kotlin.math.sign
+import kotlin.random.Random
 
 class SDraw2D : SortedIteratingSystem(
     Family.all(CPos::class.java).get(),
@@ -32,17 +38,19 @@ class SDraw2D : SortedIteratingSystem(
 
     init {
         cam.translate(area.hw, area.hh, 0f)
+        cam.setToOrtho(false, area.w, area.h)
     }
 
     override fun processEntity(entity: Entity?, deltaTime: Float) {
         val pos = cPos[entity].pos
-        batch.draw(image, pos.prevX, pos.prevY, 1f, 1f)
-        batch.draw(image, pos.x, pos.y, 1f, 1f)
+        batch.setColor(Color.WHITE)
+        batch.draw(image, pos.prevX.round(), pos.prevY.round(), 1f, 1f)
+        batch.setColor(Color.CORAL)
+        batch.draw(image, pos.x.round(), pos.y.round(), 1f, 1f)
     }
 
     override fun update(deltaTime: Float) {
-        cam.setToOrtho(false, area.w, area.h)
-//        cam.translate(xTrans, yTrans)
+        cam.position.set(CurrentCamFocus.x.round(), CurrentCamFocus.y.round(), cam.position.z)
         cam.update()
         batch.projectionMatrix = cam.combined
         buffer.begin()
@@ -57,6 +65,9 @@ class SDraw2D : SortedIteratingSystem(
         val texture = buffer.colorBufferTexture
         texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
 
+        cam.position.set(area.hw, area.hh, 0f)
+        cam.update()
+        batch.projectionMatrix = cam.combined
         batch.begin()
         batch.draw(texture, 0f, area.h, area.w, -area.h)
         batch.end()
@@ -73,6 +84,10 @@ class SDraw2D : SortedIteratingSystem(
             return FrameBuffer(Pixmap.Format.RGBA8888, area.wI, area.hI, false)
         }
     }
+}
+
+private fun Float.round(): Float {
+    return this.roundToInt().toFloat()
 }
 
 class ZComparator : Comparator<Entity> {

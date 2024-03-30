@@ -23,7 +23,7 @@ class SControl : IteratingSystem(Family.all(CDirection::class.java, CControllabl
         listOf(
             DOWN, S
         ) to { vel: CDirection, delta: Float ->
-            vel.acceleration += CarBuilder.acceleration * delta
+            vel.acceleration -= CarBuilder.acceleration * delta
             vel.acceleration.coerceIn(0f, CarBuilder.maxAcceleration)
         },
         listOf(

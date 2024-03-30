@@ -6,9 +6,6 @@ class Pos {
 
     private val pos: Vector3 = Vector3()
     private val previousPos: Vector3 = Vector3()
-    val xI: Int get() = pos.x.toInt()
-    val yI: Int get() = pos.y.toInt()
-    val zI: Int get() = pos.z.toInt()
     val x: Float get() = pos.x
     val prevX: Float get() = previousPos.x
     val y: Float get() = pos.y
