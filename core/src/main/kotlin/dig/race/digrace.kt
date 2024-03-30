@@ -1,35 +1,37 @@
 package dig.race
 
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.Texture.TextureFilter.Linear
+import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import dig.race.systems.SDraw2D
+import dig.race.systems.SMvt
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.assets.disposeSafely
-import ktx.assets.toInternalFile
-import ktx.graphics.use
 
 class digrace : KtxGame<KtxScreen>() {
     override fun create() {
-        addScreen(FirstScreen())
-        setScreen<FirstScreen>()
+        addScreen(MainScreenTurnedOn())
+        setScreen<MainScreenTurnedOn>()
     }
 }
 
-class FirstScreen : KtxScreen {
-    private val image = Texture("logo.png".toInternalFile(), true).apply { setFilter(Linear, Linear) }
+class MainScreenTurnedOn : KtxScreen {
     private val batch = SpriteBatch()
+    private val engine = PooledEngine()
+
+    init {
+        engine.addSystem(SMvt())
+        engine.addSystem(SDraw2D())
+        FamilyBuilder.addCar(engine)
+    }
 
     override fun render(delta: Float) {
         clearScreen(red = 0.7f, green = 0.7f, blue = 0.7f)
-        batch.use {
-            it.draw(image, 100f, 160f)
-        }
+        engine.update(delta)
     }
 
     override fun dispose() {
-        image.disposeSafely()
         batch.disposeSafely()
     }
 }
