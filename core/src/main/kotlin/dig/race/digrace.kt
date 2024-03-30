@@ -1,10 +1,7 @@
 package dig.race
 
-import com.badlogic.ashley.core.PooledEngine
-import dig.race.systems.SCam
-import dig.race.systems.SControl
-import dig.race.systems.SDraw2D
-import dig.race.systems.SMvt
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.utils.Array
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
@@ -17,23 +14,33 @@ class digrace : KtxGame<KtxScreen>() {
 }
 
 class MainScreenTurnedOn : KtxScreen {
-    private val engine = PooledEngine()
+    private val cars = Array<Car>()
+    private val drawer = Drawer()
+    private val input = Input()
+    private val physics = Physics()
+    private var player = Builder.createCar()
+    private val map = Builder.addTrack()
 
     init {
-        engine.addSystem(SControl())
-        engine.addSystem(SMvt())
-        engine.addSystem(SDraw2D())
-        engine.addSystem(SCam())
-        CarBuilder.addCar(engine)
+        cars.add(player)
+        Gdx.input.inputProcessor = input
     }
 
     override fun render(delta: Float) {
         clearScreen(red = 0.0f, green = 0.0f, blue = 0.0f)
-        engine.update(delta)
+        input.act()
+        cars.forEach { car ->
+            car.act(input.act(), delta)
+        }
+        physics.moveCars(delta, cars)
+        with(player.pos) {
+            CurrentCamFocus.x = x
+            CurrentCamFocus.y = y
+            CurrentCamFocus.z = z + 5f
+        }
+        drawer.draw(cars)
     }
 
     override fun dispose() {
-        engine.removeAllEntities()
-        engine.clearPools()
     }
 }
