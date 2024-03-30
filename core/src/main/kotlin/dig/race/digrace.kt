@@ -34,6 +34,7 @@ class MainScreenTurnedOn : KtxScreen {
             car.act(input.act(), delta)
         }
         physics.moveCars(delta, cars)
+        Collider.checkCollisions(cars, track)
         with(player.pos) {
             CurrentCamFocus.x = x
             CurrentCamFocus.y = y

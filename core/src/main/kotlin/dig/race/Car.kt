@@ -2,7 +2,8 @@ package dig.race
 
 class Car(
     val pos: Pos = Pos(),
-    val dir: Dir = Dir()
+    val dir: Dir = Dir(),
+    val maxSpeed: Float = 1200f
 ) {
 
     private val keysToActions = mapOf(
@@ -29,4 +30,5 @@ class Car(
             keysToActions[action]?.invoke(dir, delta)
         }
     }
+
 }

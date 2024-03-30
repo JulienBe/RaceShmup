@@ -53,7 +53,7 @@ class Drawer {
     fun draw(track: Track) {
         batch.color = Color.GRAY
         track.pieces.forEach {
-            batch.draw(image, it.x.toFloat(), it.y.toFloat(), Track.pieceSizeF, Track.pieceSizeF)
+            it.forEach { it.draw(batch, image) }
         }
     }
 
