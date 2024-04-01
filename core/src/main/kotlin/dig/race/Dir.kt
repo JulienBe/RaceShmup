@@ -7,5 +7,5 @@ data class Dir(
     var acceleration: Float = 0f,
     var turningAngle: Float = 0f,
     var angle: Float = 0f,
-    var speed: Float = 0f
+    var speedFactor: Float = 0f
 )
